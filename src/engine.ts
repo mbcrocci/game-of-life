@@ -40,13 +40,16 @@ export class GameOfLifeEngine {
   public startLife(): void {
     if (!this.intervalKey) {
       this.intervalKey = window.setInterval(() => {
+        const lifeStr = this.toString();
         this.drawDots();
-        const life = this.life;
-        this.life = life.map((children, i) => (
+        this.life = this.life.map((children, i) => (
           children.map((isSurvive, j) => (
             this.isSurviveNextGeneration(j, i, isSurvive)
           ))
         ));
+        if (lifeStr === this.toString()) {
+          this.stopLife();
+        }
       }, 500);
     }
   }
@@ -56,6 +59,10 @@ export class GameOfLifeEngine {
       clearInterval(this.intervalKey);
       this.intervalKey = null;
     }
+  }
+
+  public toString(): string {
+    return this.life.map((v) => v.join('')).join('\n');
   }
 
   protected drawDot(x: number, y: number): void {
